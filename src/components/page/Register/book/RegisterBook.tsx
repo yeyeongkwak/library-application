@@ -1,74 +1,52 @@
-import { Avatar, Breadcrumb, Button, Dropdown, Flex, Input, MenuProps, Select, Space } from 'antd';
+import { Avatar, Breadcrumb, Button, Dropdown, Flex, Input, MenuProps, Modal, Select, Space } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { BookOutlined, DownOutlined, FieldNumberOutlined, UserOutlined } from '@ant-design/icons';
-import { Container, InnerContainer, ItemCenterWrapper } from '../../../../styles/register';
+import { addBook } from '../../../../api/book/book-api';
+import { items } from '../../../../data/data';
 
 export const RegisterBook = () => {
-  const [isFocused, setIsFocused] = useState(false);
-  const divRef = useRef<HTMLDivElement>(null);
-  const items = [
-    {
-      label: '과학',
-      value: 'SCIENCE'
-    },
-    {
-      label: '사회',
-      value: 'SOCIETY'
-    },
-    {
-      label: '경제',
-      value: 'ECONOMY'
-    },
-    {
-      label: '컴퓨터',
-      value: 'COMPUTER'
-    },
-    {
-      label: '언어',
-      value: 'LANGUAGE'
-    }
-  ];
+  const [bookNameStatus, setBookNameStatus] = useState<'' | 'error' | 'warning' | undefined>('');
+  const [bookClassificationStatus, setBookClassificationStatus] = useState<'' | 'error' | 'warning' | undefined>('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const initialValues = {
+    bookName: { value: '', errorText: '※ 도서명은 필수 입력사항입니다.' },
+    bookClassification: { value: '', errorText: '※ 분류는 필수 입력사항입니다.' }
+  };
 
-  const [isClicked, setIsClicked] = useState<boolean>(false);
+  const [values, setValues] = useState(initialValues);
 
-  const [status, setStatus] = useState<'' | 'error' | 'warning' | undefined>('');
-  const [classification, setClassification] = useState('');
-
-  const handleChange = (value: string) => {
-    setClassification(value);
-    if (value === '') {
-      setStatus('error');
+  const handleBookNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setBookNameStatus(newValue === '' ? 'error' : '');
+    setValues({ ...values, bookName: { ...values.bookName, value: newValue } });
+  };
+  const handleBookNameBlur = () => {
+    if (values.bookName.value === '') {
+      setBookNameStatus('error');
     } else {
-      setStatus('');
+      setBookNameStatus('');
     }
   };
 
-  const handleClick = () => {
-    if (classification === '') {
-      setStatus('error');
+  const handleClassificationChange = (value: string) => {
+    setBookClassificationStatus(value === '' ? 'error' : '');
+    setValues({ ...values, bookClassification: { ...values.bookClassification, value: value } });
+  };
+
+  const handleBookClassificationBlur = () => {
+    if (values.bookClassification.value === '') {
+      setBookClassificationStatus('error');
     } else {
-      setStatus('');
-    }
-  };
-  const handleMouseOut = () => {
-    if (!isClicked) {
-      setIsFocused(false);
+      setBookClassificationStatus('');
     }
   };
 
-  const handleMouseEnter = () => {
-    if (!isClicked) {
-      setIsFocused(true);
-    }
-  };
-
-  const handleClickOutside = (event: MouseEvent) => {
-    console.log(event.target);
-    if (divRef.current && !divRef.current.contains(event.target as Node)) {
-      console.log('---out');
-      setIsClicked(false);
+  const onSubmit = (data: { name: string; type: string }) => {
+    if (values.bookName.value === '' || values.bookClassification.value === '') {
+      setModalOpen(true);
     } else {
-      setIsClicked(true);
+      addBook(data).then(() => setSuccessModalOpen(true));
     }
   };
 
@@ -88,12 +66,21 @@ export const RegisterBook = () => {
               alignItems: 'center'
             }}
           >
-            <span style={{ marginRight: '10px', textAlign: 'center' }}>이름</span>
-            <Input
-              style={{ width: '250px', marginBottom: '20px', alignItems: 'center' }}
-              size="large"
-              placeholder="large size"
-            />
+            <span style={{ marginRight: '10px', textAlign: 'center' }}>도서명</span>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <Input
+                style={{ width: '250px' }}
+                size="large"
+                placeholder="도서명을 입력해주세요"
+                onChange={handleBookNameChange}
+                onBlur={handleBookNameBlur}
+                name={'bookName'}
+                status={bookNameStatus}
+              />
+              {bookNameStatus === 'error' && (
+                <span style={{ color: 'red' }}>{bookNameStatus === 'error' ? values.bookName.errorText : ''}</span>
+              )}
+            </div>
           </div>
 
           <div
@@ -107,22 +94,56 @@ export const RegisterBook = () => {
               alignItems: 'center'
             }}
           >
-            <span style={{ marginRight: '10px' }}>분류</span>
-            <Select
-              placeholder="분류를 선택해주세요"
-              size={'large'}
-              onChange={handleChange}
-              style={{ width: 250 }}
-              options={items}
-              onBlur={handleClick}
-              status={status}
-            />
+            <span style={{ marginRight: '10px', minWidth: '42px', textAlign: 'center' }}>분류</span>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <Select
+                placeholder="분류를 선택해주세요"
+                size={'large'}
+                onChange={handleClassificationChange}
+                style={{ width: 250 }}
+                options={items}
+                onBlur={handleBookClassificationBlur}
+                status={bookClassificationStatus}
+                value={values.bookClassification.value}
+              />
+              {bookClassificationStatus === 'error' && (
+                <span style={{ color: 'red' }}>
+                  {bookClassificationStatus === 'error' ? values.bookClassification.errorText : ''}
+                </span>
+              )}
+            </div>
           </div>
-          <Button type="primary" size={'large'}>
+          <Button
+            type="primary"
+            size={'large'}
+            onClick={() => onSubmit({ name: values.bookName.value, type: values.bookClassification.value })}
+          >
             저장
           </Button>
         </Flex>
       </Flex>
+
+      <Modal
+        open={modalOpen}
+        okText={'확인'}
+        cancelButtonProps={{ style: { display: 'none' } }}
+        onOk={() => setModalOpen(false)}
+        okButtonProps={{ style: { textAlign: 'center' } }}
+      >
+        <p style={{ textAlign: 'center' }}>필수값을 전부 입력해주세요!!</p>
+      </Modal>
+      <Modal
+        okText={'확인'}
+        open={successModalOpen}
+        cancelButtonProps={{ style: { display: 'none' } }}
+        okButtonProps={{ style: { textAlign: 'center' } }}
+        onOk={() => {
+          setSuccessModalOpen(false);
+          setValues(initialValues);
+        }}
+      >
+        <p>책이 성공적으로 등록되었습니다!!</p>
+      </Modal>
     </>
   );
 };

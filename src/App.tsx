@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import { MainHeader } from './components/Header';
 import { Register } from './components/page/Register';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { BreadCrumb } from './components/BreadCrumb';
 import { RegisterUser } from './components/page/Register/user/RegisterUser';
 import { RegisterBook } from './components/page/Register/book/RegisterBook';
+import { UserList } from './components/page/List/user/UserList';
+import { List } from './components/page/List';
+import { LoadReturnList } from './components/page/List/loan/LoadReturnList';
+import { RegisterLoan } from './components/page/Register/loan/RegisterLoan';
+import { LoanList } from './components/page/List/loan';
 
 function App() {
   const { Header, Content, Footer } = Layout;
@@ -35,6 +40,11 @@ function App() {
               <Route path={'/register'} element={<Register />} />
               <Route path={'/user/register'} element={<RegisterUser />} />
               <Route path={'/book/register'} element={<RegisterBook />} />
+              <Route path={'/list'} element={<List />} />
+              <Route path={'/user/list'} element={<UserList />} />
+              <Route path={'/loan'} element={<LoanList />} />
+              <Route path={'/book/loan'} element={<RegisterLoan />} />
+              <Route path={'/history'} element={<LoadReturnList />}></Route>
             </Routes>
           </Content>
         </Container>

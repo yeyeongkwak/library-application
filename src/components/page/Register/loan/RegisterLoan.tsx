@@ -1,19 +1,20 @@
 import { Avatar, Button, Flex, Input, Modal } from 'antd';
 import React, { useState } from 'react';
-import { UserOutlined } from '@ant-design/icons';
+import { BookOutlined, UserOutlined } from '@ant-design/icons';
 import { addUser } from '../../../../api/user/user-api';
+import { addLoan } from '../../../../api/book/book-api';
 
-export const RegisterUser = () => {
+export const RegisterLoan = () => {
   const initialValues = {
-    userName: { value: '', errorText: '※ 이름은 필수 입력사항입니다.' },
-    userAge: { value: '', errorText: '' }
+    userName: { value: '', errorText: '※ 대여자명은 필수 입력사항입니다.' },
+    bookName: { value: '', errorText: '※ 도서명은 필수 입력사항입니다.' }
   };
 
   const [values, setValues] = useState(initialValues);
   const [modalOpen, setModalOpen] = useState(false);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [userNameStatus, setUserNameStatus] = useState<'' | 'error' | 'warning' | undefined>('');
-
+  const [bookNameStatus, setBookNameStatus] = useState<'' | 'error' | 'warning' | undefined>('');
   const handleUserNameBlur = () => {
     if (values.userName.value === '') {
       setUserNameStatus('error');
@@ -27,16 +28,24 @@ export const RegisterUser = () => {
     setValues({ ...values, userName: { ...values.userName, value: newValue } });
   };
 
-  const handleUserAgeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBookNameBlur = () => {
+    if (values.bookName.value === '') {
+      setBookNameStatus('error');
+    } else {
+      setBookNameStatus('');
+    }
+  };
+
+  const handleBookNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    setValues({ ...values, userAge: { ...values.userAge, value: newValue } });
+    setValues({ ...values, bookName: { ...values.bookName, value: newValue } });
   };
 
   const onSubmit = (data: any) => {
     if (values.userName.value === '') {
       setModalOpen(true);
     } else {
-      addUser(data).then(() => setSuccessModalOpen(true));
+      addLoan(data).then(() => setSuccessModalOpen(true));
     }
   };
 
@@ -44,7 +53,7 @@ export const RegisterUser = () => {
     <>
       <Flex gap="middle" vertical justify={'center'}>
         <Flex justify={'center'} align={'center'} vertical>
-          <Avatar size={100} icon={<UserOutlined />} style={{ backgroundColor: '#1677ff', marginBottom: '20px' }} />
+          <Avatar size={100} icon={<BookOutlined />} style={{ backgroundColor: '#1677ff', marginBottom: '20px' }} />
           <div
             style={{
               display: 'flex',
@@ -56,7 +65,7 @@ export const RegisterUser = () => {
               alignItems: 'center'
             }}
           >
-            <span style={{ marginRight: '10px', textAlign: 'center' }}>이름</span>
+            <span style={{ marginLeft: '10px', marginRight: '10px', textAlign: 'center' }}>이름</span>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <Input
                 style={{ width: '250px' }}
@@ -83,21 +92,27 @@ export const RegisterUser = () => {
               alignItems: 'center'
             }}
           >
-            <span style={{ marginRight: '10px', textAlign: 'center' }}>나이</span>
-
-            <Input
-              style={{ width: '250px' }}
-              size="large"
-              placeholder="나이를 입력해주세요"
-              onChange={handleUserAgeChange}
-            />
+            <span style={{ marginRight: '10px', textAlign: 'center' }}>도서명</span>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <Input
+                style={{ width: '250px' }}
+                size="large"
+                placeholder="도서명을 입력해주세요"
+                onBlur={handleBookNameBlur}
+                onChange={handleBookNameChange}
+                status={bookNameStatus}
+              />
+              {bookNameStatus === 'error' && (
+                <span style={{ color: 'red' }}>{bookNameStatus === 'error' ? values.bookName.errorText : ''}</span>
+              )}
+            </div>
           </div>
 
           <Button
             type="primary"
             size={'large'}
             onClick={() => {
-              onSubmit({ name: values.userName.value, age: values.userAge.value });
+              onSubmit({ userName: values.userName.value, bookName: values.bookName.value });
             }}
           >
             저장
@@ -115,16 +130,27 @@ export const RegisterUser = () => {
         <p style={{ textAlign: 'center' }}>필수값을 전부 입력해주세요!!</p>
       </Modal>
       <Modal
-        okText={'확인'}
-        open={successModalOpen}
-        cancelButtonProps={{ style: { display: 'none' } }}
-        okButtonProps={{ style: { textAlign: 'center' } }}
-        onOk={() => {
+        onCancel={() => {
           setSuccessModalOpen(false);
           setValues(initialValues);
         }}
+        footer={
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Button
+              type={'primary'}
+              onClick={() => {
+                setSuccessModalOpen(false);
+                setValues(initialValues);
+              }}
+              // onClick={() => de({ name: values.userName.value, age: values.userAge.value })}
+            >
+              확인
+            </Button>
+          </div>
+        }
+        open={successModalOpen}
       >
-        <p>사용자가 성공적으로 등록되었습니다!!</p>
+        <p style={{ textAlign: 'center', marginBottom: '20px' }}>도서가 성공적으로 대여되었습니다!!</p>
       </Modal>
     </>
   );

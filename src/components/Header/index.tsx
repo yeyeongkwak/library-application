@@ -12,10 +12,11 @@ export const MainHeader: React.FC = () => {
   useEffect(() => {
     // 현재 URL
     const currentUrl = routerLocation.pathname;
-
+    console.log(items.map(item => item.url, currentUrl));
     // items 배열에서 현재 URL에 해당하는 키를 찾기
-    const activeItem = items.find(item => item.url === currentUrl);
+    const activeItem = items.find(item => currentUrl.includes(item.url));
 
+    console.log('activeIndex', activeIndex);
     // 해당 키를 찾았다면 해당 키를 activeIndex로 설정
     if (activeItem) {
       setActiveIndex(activeItem.key);
@@ -37,6 +38,11 @@ export const MainHeader: React.FC = () => {
       key: '3',
       label: '대출/반납 내역',
       url: '/history'
+    },
+    {
+      key: '4',
+      label: '대출/반납하기',
+      url: '/loan'
     }
   ];
 

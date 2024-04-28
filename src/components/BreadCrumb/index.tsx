@@ -46,6 +46,16 @@ export const BreadCrumb = () => {
       secondStep: '도서 목록',
       url: '/book/list',
       baseUrl: '/list'
+    },
+    {
+      firstStep: '대출/반납하기',
+      secondStep: '대출하기',
+      url: '/book/loan',
+      baseUrl: '/loan'
+    },
+    {
+      firstStep: '대출/내역',
+      url: '/history'
     }
   ];
 
@@ -54,9 +64,9 @@ export const BreadCrumb = () => {
   console.log(exactMenus);
   const exactMenu = breadCrumbMenu.find(b => b.url === routerLocation.pathname);
   return (
-    <Breadcrumb style={{ margin: '16px' }} separator=">" items={[]}>
+    <Breadcrumb style={{ margin: '16px' }} separator=">">
       <Breadcrumb.Item href={exactMenu?.baseUrl}>{exactMenu?.firstStep}</Breadcrumb.Item>
-      <Breadcrumb.Item>{exactMenu?.secondStep}</Breadcrumb.Item>
+      {exactMenu && exactMenu.secondStep && <Breadcrumb.Item>{exactMenu?.secondStep}</Breadcrumb.Item>}
     </Breadcrumb>
   );
 };

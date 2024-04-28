@@ -1,13 +1,10 @@
 import React from 'react';
-import { RegisterUser } from './user/RegisterUser';
-import { RegisterBook } from './book/RegisterBook';
-import { Avatar, Card, Col, Flex, Row } from 'antd';
+import { Avatar, Card, Flex } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import Meta from 'antd/es/card/Meta';
-import Icon, { BookOutlined, UserAddOutlined } from '@ant-design/icons';
+import { BookOutlined, UserAddOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
-export const Register = () => {
+export const LoanList = () => {
   const navigate = useNavigate();
 
   // 호버 시 변경될 테두리 색상
@@ -38,7 +35,7 @@ export const Register = () => {
       <div>
         <StyledCard
           styles={{ header: { borderBottom: 0, height: '300px' } }}
-          onClick={() => navigate('/user/register')}
+          onClick={() => navigate('/book/loan')}
           title={
             <Avatar
               className={'avatar-user'}
@@ -49,13 +46,13 @@ export const Register = () => {
           }
           bordered={true}
         >
-          <p style={{ fontWeight: 'bold' }}>사용자 등록</p>
+          <p style={{ fontWeight: 'bold' }}>대출하기</p>
         </StyledCard>
       </div>
 
       <StyledCard
         styles={{ header: { borderBottom: 0, height: '300px' } }}
-        onClick={() => navigate('/book/register')}
+        onClick={() => navigate('/user/register')}
         title={
           <Avatar
             className={'avatar-book'}
@@ -66,7 +63,7 @@ export const Register = () => {
         }
         bordered={true}
       >
-        <p style={{ fontWeight: 'bold' }}>도서 등록</p>
+        <p style={{ fontWeight: 'bold' }}>반납하기</p>
       </StyledCard>
 
       {/*<RegisterUser />*/}
