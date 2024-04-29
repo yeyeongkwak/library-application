@@ -127,6 +127,8 @@ export const UserList = () => {
       {data.length > 0 ? <Table dataSource={dataSources} pagination={false} columns={columns} /> : <></>}
       <Modal
         open={updateModal}
+        width={450}
+        styles={{ body: { marginLeft: '10px' } }}
         title={<p style={{ textAlign: 'center' }}>수정</p>}
         onCancel={() => {
           setUpdateModal(false);
@@ -154,18 +156,19 @@ export const UserList = () => {
         <div
           style={{
             display: 'flex',
-            padding: '7px 11px',
+            padding: '7px',
             width: '350px',
             fontSize: '16px',
             lineHeight: '1.5',
             marginBottom: '20px',
-            alignItems: 'center'
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
         >
           <span style={{ marginRight: '10px', textAlign: 'center' }}>이름</span>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Input
-              style={{ width: '250px' }}
+              style={{ width: '300px' }}
               size="large"
               value={values.userName.value}
               placeholder="이름을 입력해주세요"
@@ -178,27 +181,6 @@ export const UserList = () => {
             )}
           </div>
         </div>
-        {/*<div*/}
-        {/*  style={{*/}
-        {/*    display: 'flex',*/}
-        {/*    padding: '7px 11px',*/}
-        {/*    width: '350px',*/}
-        {/*    fontSize: '16px',*/}
-        {/*    lineHeight: '1.5',*/}
-        {/*    marginBottom: '20px',*/}
-        {/*    alignItems: 'center'*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  <span style={{ marginRight: '10px', textAlign: 'center' }}>나이</span>*/}
-
-        {/*  <Input*/}
-        {/*    style={{ width: '250px' }}*/}
-        {/*    size="large"*/}
-        {/*    value={values.userAge.value}*/}
-        {/*    placeholder="나이를 입력해주세요"*/}
-        {/*    onChange={handleUserAgeChange}*/}
-        {/*  />*/}
-        {/*</div>*/}
       </Modal>
 
       <Modal

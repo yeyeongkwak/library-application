@@ -2,6 +2,8 @@ import React from 'react';
 import { Avatar, Card, Flex } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { BookOutlined, UserAddOutlined } from '@ant-design/icons';
+import LibraryBooksSharpIcon from '@mui/icons-material/LibraryBooksSharp';
+import KeyboardReturnSharpIcon from '@mui/icons-material/KeyboardReturnSharp';
 import styled from 'styled-components';
 
 export const LoanList = () => {
@@ -41,7 +43,7 @@ export const LoanList = () => {
               className={'avatar-user'}
               style={{ width: '100px', height: '100px' }}
               size={'large'}
-              icon={<UserAddOutlined size={100} />}
+              icon={<LibraryBooksSharpIcon style={{ width: 200 }} />}
             />
           }
           bordered={true}
@@ -52,13 +54,13 @@ export const LoanList = () => {
 
       <StyledCard
         styles={{ header: { borderBottom: 0, height: '300px' } }}
-        onClick={() => navigate('/user/register')}
+        onClick={() => navigate('/return/loan')}
         title={
           <Avatar
             className={'avatar-book'}
             style={{ width: '100px', height: '100px' }}
             size={'large'}
-            icon={<BookOutlined size={100} />}
+            icon={<KeyboardReturnSharpIcon style={{ width: 200 }} />}
           />
         }
         bordered={true}

@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom';
 
 export const BreadCrumb = () => {
   const routerLocation = useLocation();
-  const isBaseUrl = ['/register', '/history', '/list'];
 
   const breadCrumbMenus = [
     [
@@ -54,6 +53,12 @@ export const BreadCrumb = () => {
       baseUrl: '/loan'
     },
     {
+      firstStep: '대출/반납하기',
+      secondStep: '반납하기',
+      url: '/return/loan',
+      baseUrl: '/loan'
+    },
+    {
       firstStep: '대출/내역',
       url: '/history'
     }
@@ -61,7 +66,6 @@ export const BreadCrumb = () => {
 
   const exactMenus = breadCrumbMenus.find(submenu => submenu.some(item => item.url === routerLocation.pathname));
 
-  console.log(exactMenus);
   const exactMenu = breadCrumbMenu.find(b => b.url === routerLocation.pathname);
   return (
     <Breadcrumb style={{ margin: '16px' }} separator=">">

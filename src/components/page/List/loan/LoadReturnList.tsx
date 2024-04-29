@@ -6,17 +6,29 @@ import { getUserList } from '../../../../api/user/user-api';
 export const LoadReturnList = () => {
   const [data, setData] = useState<any>([]);
 
-  console.log(data);
-  const dataSources =
-    data.length > 0 &&
-    data.map((d: any) => {
-      return {
-        name: d.name,
-        bookName: d.books[0].name,
-        isReturn: d.books[0].isReturn ? '반납완료' : '대출중'
-      };
-      // books: { name: d.books[0].name, isReturn: d.books[0].isReturn }
+  const dataSources: any[] = [];
+  data.forEach((user: any) => {
+    user.books.forEach((book: any) => {
+      const bookName = book.name || '';
+      const isReturn = book.isReturn ? '반납완료' : '대출중';
+      dataSources.push({
+        name: user.name,
+        bookName: bookName,
+        isReturn: isReturn
+      });
     });
+  });
+
+  // const dataSources =
+  //   data.length > 0 &&
+  //   data.map((d: any) => {
+  //     return {
+  //       name: d.name,
+  //       bookName: d.books[0].name || '',
+  //       isReturn: d.books[0].isReturn ? '반납완료' : '대출중'
+  //     };
+  //     // books: { name: d.books[0].name, isReturn: d.books[0].isReturn }
+  //   });
   const AlignType = 'left' || 'center' || 'right';
 
   const columns = [

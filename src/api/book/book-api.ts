@@ -12,3 +12,7 @@ export const loanReturnHistory = async () => {
 export const addLoan = async (data: { userName: string; bookName: string }) => {
   await axios.post('http://localhost:8080/book/loan', data);
 };
+
+export const returnBook = async (data: { userName: string; bookName: string }) => {
+  await axios.put('http://localhost:8080/book/return', data);
+};

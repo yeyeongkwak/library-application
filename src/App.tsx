@@ -13,6 +13,7 @@ import { List } from './components/page/List';
 import { LoadReturnList } from './components/page/List/loan/LoadReturnList';
 import { RegisterLoan } from './components/page/Register/loan/RegisterLoan';
 import { LoanList } from './components/page/List/loan';
+import { RegisterReturn } from './components/page/Register/return/RegisterReturn';
 
 function App() {
   const { Header, Content, Footer } = Layout;
@@ -44,7 +45,8 @@ function App() {
               <Route path={'/user/list'} element={<UserList />} />
               <Route path={'/loan'} element={<LoanList />} />
               <Route path={'/book/loan'} element={<RegisterLoan />} />
-              <Route path={'/history'} element={<LoadReturnList />}></Route>
+              <Route path={'/return/loan'} element={<RegisterReturn />} />
+              <Route path={'/history'} element={<LoadReturnList />} />
             </Routes>
           </Content>
         </Container>

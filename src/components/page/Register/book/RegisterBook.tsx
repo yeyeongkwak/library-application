@@ -76,6 +76,7 @@ export const RegisterBook = () => {
                 onBlur={handleBookNameBlur}
                 name={'bookName'}
                 status={bookNameStatus}
+                value={values.bookName.value}
               />
               {bookNameStatus === 'error' && (
                 <span style={{ color: 'red' }}>{bookNameStatus === 'error' ? values.bookName.errorText : ''}</span>

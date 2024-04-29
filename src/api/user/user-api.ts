@@ -14,6 +14,5 @@ export const updateUser = async (data: { id: number; name: string; age?: number 
 };
 
 export const deleteUser = async (userName: string) => {
-  console.log(userName);
   await axios.delete(`http://localhost:8080/user?name=${userName}`);
 };
