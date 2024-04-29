@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import './App.css';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+// import './App.css';
+// import './global.css';
+import { Layout, theme } from 'antd';
 import { MainHeader } from './components/Header';
 import { Register } from './components/page/Register';
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import { BreadCrumb } from './components/BreadCrumb';
 import { RegisterUser } from './components/page/Register/user/RegisterUser';
@@ -14,9 +15,11 @@ import { LoadReturnList } from './components/page/List/loan/LoadReturnList';
 import { RegisterLoan } from './components/page/Register/loan/RegisterLoan';
 import { LoanList } from './components/page/List/loan';
 import { RegisterReturn } from './components/page/Register/return/RegisterReturn';
+import { BookList } from './components/page/List/book/BookList';
+import { StatisticList } from './components/page/List/statistic/StatisticList';
 
 function App() {
-  const { Header, Content, Footer } = Layout;
+  const { Content, Footer } = Layout;
 
   const Container = styled.div`
     display: flex;
@@ -27,8 +30,14 @@ function App() {
   `;
 
   const {
-    token: { colorBgContainer, borderRadiusLG }
+    token: { colorBgContainer }
   } = theme.useToken();
+
+  useEffect(() => {
+    if (window.location.pathname === '/') {
+      window.location.pathname = '/register';
+    }
+  }, []);
 
   return (
     <Router>
@@ -43,10 +52,12 @@ function App() {
               <Route path={'/book/register'} element={<RegisterBook />} />
               <Route path={'/list'} element={<List />} />
               <Route path={'/user/list'} element={<UserList />} />
+              <Route path={'/book/list'} element={<BookList />} />
               <Route path={'/loan'} element={<LoanList />} />
               <Route path={'/book/loan'} element={<RegisterLoan />} />
               <Route path={'/return/loan'} element={<RegisterReturn />} />
               <Route path={'/history'} element={<LoadReturnList />} />
+              <Route path={'/statistic'} element={<StatisticList />} />
             </Routes>
           </Content>
         </Container>

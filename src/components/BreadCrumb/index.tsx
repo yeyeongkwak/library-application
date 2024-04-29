@@ -5,22 +5,6 @@ import { useLocation } from 'react-router-dom';
 export const BreadCrumb = () => {
   const routerLocation = useLocation();
 
-  const breadCrumbMenus = [
-    [
-      {
-        firstStep: '등록하기',
-        secondStep: '사용자',
-        url: '/user/register',
-        href: '/register'
-      },
-      {
-        firstStep: '등록하기',
-        secondStep: '도서',
-        url: '/book/register',
-        href: '/register'
-      }
-    ]
-  ];
   const breadCrumbMenu = [
     {
       firstStep: '등록하기',
@@ -61,14 +45,16 @@ export const BreadCrumb = () => {
     {
       firstStep: '대출/내역',
       url: '/history'
+    },
+    {
+      firstStep: '통계',
+      url: '/statistic'
     }
   ];
 
-  const exactMenus = breadCrumbMenus.find(submenu => submenu.some(item => item.url === routerLocation.pathname));
-
   const exactMenu = breadCrumbMenu.find(b => b.url === routerLocation.pathname);
   return (
-    <Breadcrumb style={{ margin: '16px' }} separator=">">
+    <Breadcrumb style={{ margin: '16px', fontSize: '18px' }} separator=">">
       <Breadcrumb.Item href={exactMenu?.baseUrl}>{exactMenu?.firstStep}</Breadcrumb.Item>
       {exactMenu && exactMenu.secondStep && <Breadcrumb.Item>{exactMenu?.secondStep}</Breadcrumb.Item>}
     </Breadcrumb>

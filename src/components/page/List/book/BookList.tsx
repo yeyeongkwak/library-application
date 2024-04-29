@@ -1,9 +1,10 @@
 import { deleteUser, getUserList, updateUser } from '../../../../api/user/user-api';
 import React, { useEffect, useState } from 'react';
-import { Button, Empty, Input, Modal, Space, Table } from 'antd';
-import { AlignType } from '../../../../types/types';
+import { Button, Empty, Input, Modal, Space, Spin, Table } from 'antd';
+import { deleteBook, getBooks, updateBook } from '../../../../api/book/book-api';
+import { AlignType, BookClassification } from '../../../../types/types';
 
-export const UserList = () => {
+export const BookList = () => {
   const [data, setData] = useState<any>([]);
   const [updateModal, setUpdateModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -12,56 +13,62 @@ export const UserList = () => {
   const [successUpdateModalOpen, setSuccessUpdateModalOpen] = useState(false);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const initialValues = {
-    userId: 0,
-    userName: { value: '', errorText: '※ 이름은 필수 입력사항입니다.' },
-    userAge: { value: 0, errorText: '' }
+    bookId: 0,
+    bookName: { value: '', errorText: '※ 도서명은 필수 입력사항입니다.' }
   };
   const [values, setValues] = useState(initialValues);
-  const [userNameStatus, setUserNameStatus] = useState<'' | 'error' | 'warning' | undefined>('');
-
-  const handleUserNameBlur = () => {
-    if (values.userName.value === '') {
-      setUserNameStatus('error');
+  const [bookNameStatus, setBookNameStatus] = useState<'' | 'error' | 'warning' | undefined>('');
+  const [loading, setLoading] = useState(false);
+  const handleBookNameBlur = () => {
+    if (values.bookName.value === '') {
+      setBookNameStatus('error');
     } else {
-      setUserNameStatus('');
+      setBookNameStatus('');
     }
   };
 
-  const handleUserNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBookNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    setValues({ ...values, userName: { ...values.userName, value: newValue } });
+    setValues({ ...values, bookName: { ...values.bookName, value: newValue } });
   };
 
   const fetchData = async () => {
-    const result = await getUserList();
-    setData(result);
+    try {
+      setLoading(true);
+      const result = await getBooks();
+      setData(result);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchData();
-  }, [data]);
+  }, []);
 
   const dataSources =
     data.length > 0 &&
-    data.map((d: any) => {
+    data.map((d: { id: number; name: string; type: string }) => {
       return {
         id: d.id,
         name: d.name,
-        age: d.age
+        type: BookClassification[d.type]?.label || ''
       };
     });
 
   const columns = [
     {
-      title: '이름',
+      title: '도서명',
       dataIndex: 'name',
       width: '40%',
       ellipsis: true,
       align: 'center' as typeof AlignType
     },
     {
-      title: '나이',
-      dataIndex: 'age',
+      title: '분류',
+      dataIndex: 'type',
       width: '30%', // 전체 너비의 30%,
       align: 'center' as typeof AlignType
     },
@@ -76,12 +83,11 @@ export const UserList = () => {
             onClick={() => {
               setUpdateModal(true);
               setValues({
-                userId: record.id,
-                userName: {
-                  ...values.userName,
+                bookId: record.id,
+                bookName: {
+                  ...values.bookName,
                   value: record.name
-                },
-                userAge: { ...values.userAge, value: record.age }
+                }
               });
             }}
           >
@@ -91,12 +97,12 @@ export const UserList = () => {
             onClick={() => {
               setDeleteModal(true);
               setValues({
-                userId: record.id,
-                userName: {
-                  ...values.userName,
-                  value: record.name
-                },
-                userAge: { ...values.userAge, value: record.age }
+                ...values,
+                bookId: record.id
+                // bookName: {
+                //   ...values.bookName,
+                //   value: record.name
+                // },
               });
             }}
           >
@@ -108,37 +114,41 @@ export const UserList = () => {
   ];
 
   const onSubmit = (data: { id: number; name: string }) => {
-    if (values.userName.value === '') {
+    if (values.bookName.value === '') {
       setModalOpen(true);
     } else {
-      updateUser(data)
+      updateBook(data)
         .then(() => setSuccessUpdateModalOpen(true))
         .then(() => fetchData());
     }
   };
 
-  const onDeleteSubmit = (userName: string) => {
-    deleteUser(userName).then(() => setSuccessModalOpen(true));
+  const onDeleteSubmit = (bookId: number) => {
+    deleteBook(bookId).then(() => setSuccessModalOpen(true));
   };
 
   return (
     <>
-      {
-        <Table
-          dataSource={dataSources}
-          pagination={false}
-          columns={columns}
-          locale={{
-            emptyText: (
-              <Empty
-                description="등록된 사용자가 없습니다"
-                style={{ padding: '20px' }}
-                image={Empty.PRESENTED_IMAGE_DEFAULT}
-              />
-            )
-          }}
-        />
-      }
+      {loading && (
+        <Spin tip="Loading" size="large">
+          <div className="content" />
+        </Spin>
+      )}
+      <Table
+        dataSource={dataSources}
+        pagination={false}
+        columns={columns}
+        locale={{
+          emptyText: (
+            <Empty
+              description="등록된 도서가 없습니다"
+              image={Empty.PRESENTED_IMAGE_DEFAULT}
+              style={{ padding: '20px' }}
+            />
+          )
+        }}
+      />
+
       <Modal
         open={updateModal}
         width={450}
@@ -146,7 +156,7 @@ export const UserList = () => {
         title={<p style={{ textAlign: 'center' }}>수정</p>}
         onCancel={() => {
           setUpdateModal(false);
-          setUserNameStatus('');
+          setBookNameStatus('');
           setValues(initialValues);
         }}
         footer={
@@ -155,13 +165,13 @@ export const UserList = () => {
               style={{ marginRight: '10px' }}
               onClick={() => {
                 setUpdateModal(false);
-                setUserNameStatus('');
+                setBookNameStatus('');
                 setValues(initialValues);
               }}
             >
               취소
             </Button>
-            <Button type={'primary'} onClick={() => onSubmit({ id: values.userId, name: values.userName.value })}>
+            <Button type={'primary'} onClick={() => onSubmit({ id: values.bookId, name: values.bookName.value })}>
               수정하기
             </Button>
           </div>
@@ -184,14 +194,14 @@ export const UserList = () => {
             <Input
               style={{ width: '300px' }}
               size="large"
-              value={values.userName.value}
-              placeholder="이름을 입력해주세요"
-              onBlur={handleUserNameBlur}
-              onChange={handleUserNameChange}
-              status={userNameStatus}
+              value={values.bookName.value}
+              placeholder="도서명을 입력해주세요"
+              onBlur={handleBookNameBlur}
+              onChange={handleBookNameChange}
+              status={bookNameStatus}
             />
-            {userNameStatus === 'error' && (
-              <span style={{ color: 'red' }}>{userNameStatus === 'error' ? values.userName.errorText : ''}</span>
+            {bookNameStatus === 'error' && (
+              <span style={{ color: 'red' }}>{bookNameStatus === 'error' ? values.bookName.errorText : ''}</span>
             )}
           </div>
         </div>
@@ -202,7 +212,7 @@ export const UserList = () => {
         title={<p style={{ textAlign: 'center' }}>삭제</p>}
         onCancel={() => {
           setDeleteModal(false);
-          setUserNameStatus('');
+          setBookNameStatus('');
           setValues(initialValues);
         }}
         footer={
@@ -211,23 +221,19 @@ export const UserList = () => {
               style={{ marginRight: '10px' }}
               onClick={() => {
                 setDeleteModal(false);
-                setUserNameStatus('');
+                setBookNameStatus('');
                 setValues(initialValues);
               }}
             >
               취소
             </Button>
-            <Button
-              type={'primary'}
-              onClick={() => onDeleteSubmit(values.userName.value)}
-              // onClick={() => de({ name: values.userName.value, age: values.userAge.value })}
-            >
+            <Button type={'primary'} onClick={() => onDeleteSubmit(values.bookId)}>
               삭제하기
             </Button>
           </div>
         }
       >
-        <p style={{ textAlign: 'center' }}>저장된 유저 정보가 삭제되며, 다시 복구할 수 없습니다. 삭제하시겠습니까?</p>
+        <p style={{ textAlign: 'center' }}>저장된 도서 정보가 삭제되며, 다시 복구할 수 없습니다. 삭제하시겠습니까?</p>
       </Modal>
 
       <Modal
@@ -260,14 +266,13 @@ export const UserList = () => {
         }
         open={successUpdateModalOpen}
       >
-        <p style={{ textAlign: 'center' }}>사용자 정보가 성공적으로 수정되었습니다!!</p>
+        <p style={{ textAlign: 'center' }}>도서 정보가 성공적으로 수정되었습니다!!</p>
       </Modal>
 
       <Modal
         okText={'확인'}
         footer={
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            {' '}
             <Button
               onClick={() => {
                 setSuccessModalOpen(false);
@@ -283,7 +288,7 @@ export const UserList = () => {
         }
         open={successModalOpen}
       >
-        <p style={{ textAlign: 'center' }}>사용자 정보가 성공적으로 삭제되었습니다!!</p>
+        <p style={{ textAlign: 'center' }}>도서 정보가 성공적으로 삭제되었습니다!!</p>
       </Modal>
     </>
   );

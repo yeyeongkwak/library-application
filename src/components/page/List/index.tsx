@@ -1,10 +1,9 @@
 import React from 'react';
 import { Avatar, Flex } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { UserAddOutlined, UserOutlined } from '@ant-design/icons';
-import BookSharpIcon from '@mui/icons-material/BookSharp';
+import LibraryBooksSharpIcon from '@mui/icons-material/LibraryBooksSharp';
 import { StyledCard } from '../../../styles/common';
-import PersonIcon from '@mui/icons-material/Person';
+import BallotSharpIcon from '@mui/icons-material/BallotSharp';
 export const List = () => {
   const navigate = useNavigate();
 
@@ -15,12 +14,7 @@ export const List = () => {
           styles={{ header: { borderBottom: 0, height: '300px' } }}
           onClick={() => navigate('/user/list')}
           title={
-            <Avatar
-              className={'avatar-user'}
-              style={{ width: '100px', height: '100px' }}
-              size={'large'}
-              icon={<UserOutlined size={200} />}
-            />
+            <Avatar className={'avatar-user'} size={'large'} icon={<BallotSharpIcon className={'avatar-icon'} />} />
           }
           bordered={true}
         >
@@ -34,9 +28,8 @@ export const List = () => {
           title={
             <Avatar
               className={'avatar-user'}
-              style={{ width: '100px', height: '100px' }}
               size={'large'}
-              icon={<BookSharpIcon style={{ width: 200 }} />}
+              icon={<LibraryBooksSharpIcon className={'avatar-icon'} />}
             />
           }
           bordered={true}

@@ -50,6 +50,8 @@ export const RegisterBook = () => {
     }
   };
 
+  const selectedType = items.find(i => i.label === values.bookClassification.value)?.value || '';
+
   return (
     <>
       <Flex gap="middle" vertical justify={'center'}>
@@ -117,7 +119,12 @@ export const RegisterBook = () => {
           <Button
             type="primary"
             size={'large'}
-            onClick={() => onSubmit({ name: values.bookName.value, type: values.bookClassification.value })}
+            onClick={() =>
+              onSubmit({
+                name: values.bookName.value,
+                type: values.bookClassification.value
+              })
+            }
           >
             저장
           </Button>
@@ -136,14 +143,24 @@ export const RegisterBook = () => {
       <Modal
         okText={'확인'}
         open={successModalOpen}
+        footer={
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Button
+              onClick={() => {
+                setSuccessModalOpen(false);
+                setValues(initialValues);
+              }}
+              type={'primary'}
+              style={{ textAlign: 'center' }}
+            >
+              확인
+            </Button>
+          </div>
+        }
         cancelButtonProps={{ style: { display: 'none' } }}
         okButtonProps={{ style: { textAlign: 'center' } }}
-        onOk={() => {
-          setSuccessModalOpen(false);
-          setValues(initialValues);
-        }}
       >
-        <p>책이 성공적으로 등록되었습니다!!</p>
+        <p style={{ textAlign: 'center' }}>책이 성공적으로 등록되었습니다!!</p>
       </Modal>
     </>
   );

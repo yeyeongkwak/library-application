@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, Flex } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { UserAddOutlined } from '@ant-design/icons';
+import PersonAddSharpIcon from '@mui/icons-material/PersonAddSharp';
 import { StyledCard } from '../../../styles/common';
 import BookmarkAddSharpIcon from '@mui/icons-material/BookmarkAddSharp';
 export const Register = () => {
@@ -14,12 +14,7 @@ export const Register = () => {
           styles={{ header: { borderBottom: 0, height: '300px' } }}
           onClick={() => navigate('/user/register')}
           title={
-            <Avatar
-              className={'avatar-user'}
-              style={{ width: '100px', height: '100px' }}
-              size={'large'}
-              icon={<UserAddOutlined size={100} />}
-            />
+            <Avatar size={'large'} className={'avatar-user'} icon={<PersonAddSharpIcon className={'avatar-icon'} />} />
           }
           bordered={true}
         >
@@ -33,9 +28,8 @@ export const Register = () => {
           title={
             <Avatar
               className={'avatar-book'}
-              style={{ width: '100px', height: '100px' }}
               size={'large'}
-              icon={<BookmarkAddSharpIcon style={{ width: 200 }} />}
+              icon={<BookmarkAddSharpIcon className={'avatar-icon'} />}
             />
           }
           bordered={true}

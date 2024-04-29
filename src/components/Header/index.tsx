@@ -12,11 +12,8 @@ export const MainHeader: React.FC = () => {
   useEffect(() => {
     // 현재 URL
     const currentUrl = routerLocation.pathname;
-    // console.log(items.map(item => item.url, currentUrl));
     // items 배열에서 현재 URL에 해당하는 키를 찾기
     const activeItem = items.find(item => currentUrl.includes(item.url));
-
-    // console.log('activeIndex', activeIndex);
     // 해당 키를 찾았다면 해당 키를 activeIndex로 설정
     if (activeItem) {
       setActiveIndex(activeItem.key);
@@ -43,6 +40,11 @@ export const MainHeader: React.FC = () => {
       key: '4',
       label: '대출/반납하기',
       url: '/loan'
+    },
+    {
+      key: '5',
+      label: '통계',
+      url: '/statistic'
     }
   ];
 
@@ -61,7 +63,7 @@ export const MainHeader: React.FC = () => {
         theme="dark"
         mode="horizontal"
         selectedKeys={[activeIndex]} // 메뉴 활성화를 위해 selectedKeys를 사용합니다.
-        style={{ flex: 1, minWidth: 0 }}
+        style={{ fontSize: '18px', flex: 1, minWidth: 0 }}
       >
         {items.map(item => (
           <Menu.Item key={item.key}>

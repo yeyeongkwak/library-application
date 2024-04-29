@@ -90,6 +90,7 @@ export const RegisterUser = () => {
               size="large"
               placeholder="나이를 입력해주세요"
               onChange={handleUserAgeChange}
+              value={values.userAge.value}
             />
           </div>
 
@@ -116,15 +117,25 @@ export const RegisterUser = () => {
       </Modal>
       <Modal
         okText={'확인'}
+        width={350}
         open={successModalOpen}
+        footer={
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Button
+              onClick={() => {
+                setSuccessModalOpen(false);
+                setValues(initialValues);
+              }}
+              type={'primary'}
+              style={{ textAlign: 'center' }}
+            >
+              확인
+            </Button>
+          </div>
+        }
         cancelButtonProps={{ style: { display: 'none' } }}
-        okButtonProps={{ style: { textAlign: 'center' } }}
-        onOk={() => {
-          setSuccessModalOpen(false);
-          setValues(initialValues);
-        }}
       >
-        <p>사용자가 성공적으로 등록되었습니다!!</p>
+        <p style={{ textAlign: 'center' }}>사용자가 성공적으로 등록되었습니다!!</p>
       </Modal>
     </>
   );

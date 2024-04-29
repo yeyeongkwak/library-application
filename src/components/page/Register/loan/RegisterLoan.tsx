@@ -1,7 +1,6 @@
 import { Avatar, Button, Flex, Input, Modal } from 'antd';
 import React, { useState } from 'react';
-import { BookOutlined, UserOutlined } from '@ant-design/icons';
-import { addUser } from '../../../../api/user/user-api';
+import { BookOutlined } from '@ant-design/icons';
 import { addLoan } from '../../../../api/book/book-api';
 
 export const RegisterLoan = () => {
@@ -101,6 +100,7 @@ export const RegisterLoan = () => {
                 onBlur={handleBookNameBlur}
                 onChange={handleBookNameChange}
                 status={bookNameStatus}
+                value={values.bookName.value}
               />
               {bookNameStatus === 'error' && (
                 <span style={{ color: 'red' }}>{bookNameStatus === 'error' ? values.bookName.errorText : ''}</span>
@@ -142,7 +142,6 @@ export const RegisterLoan = () => {
                 setSuccessModalOpen(false);
                 setValues(initialValues);
               }}
-              // onClick={() => de({ name: values.userName.value, age: values.userAge.value })}
             >
               확인
             </Button>

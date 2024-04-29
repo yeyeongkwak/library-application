@@ -1,7 +1,7 @@
-import { Button, Space, Table } from 'antd';
+import { Empty, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { loanReturnHistory } from '../../../../api/book/book-api';
-import { getUserList } from '../../../../api/user/user-api';
+import { AlignType } from '../../../../types/types';
 
 export const LoadReturnList = () => {
   const [data, setData] = useState<any>([]);
@@ -18,18 +18,6 @@ export const LoadReturnList = () => {
       });
     });
   });
-
-  // const dataSources =
-  //   data.length > 0 &&
-  //   data.map((d: any) => {
-  //     return {
-  //       name: d.name,
-  //       bookName: d.books[0].name || '',
-  //       isReturn: d.books[0].isReturn ? '반납완료' : '대출중'
-  //     };
-  //     // books: { name: d.books[0].name, isReturn: d.books[0].isReturn }
-  //   });
-  const AlignType = 'left' || 'center' || 'right';
 
   const columns = [
     {
@@ -62,6 +50,23 @@ export const LoadReturnList = () => {
   }, []);
 
   return (
-    <>{data && data.length > 0 ? <Table dataSource={dataSources} pagination={false} columns={columns} /> : <></>}</>
+    <>
+      {
+        <Table
+          dataSource={dataSources}
+          locale={{
+            emptyText: (
+              <Empty
+                description="대출 / 반납 내역이 없습니다"
+                style={{ padding: '20px' }}
+                image={Empty.PRESENTED_IMAGE_DEFAULT}
+              />
+            )
+          }}
+          pagination={false}
+          columns={columns}
+        />
+      }
+    </>
   );
 };
